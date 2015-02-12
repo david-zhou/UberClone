@@ -3,9 +3,31 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:id="@+id/text"
+    <Button
+        android:id="@+id/share_gplus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share" />
+        android:text="@string/share_googleplus"
+    />
 
+    <Button
+        android:id="@+id/share_fb_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share_fb"
+    />
+
+    <Button
+    android:id="@+id/share_wa_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/share_wa"
+    />
+
+    <Button
+        android:id="@+id/share_twitter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share_twitter"
+    />
 </LinearLayout>

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">UberClone</string>
+
     <string name="title_section0">Home</string>
     <string name="title_section1">Profile</string>
     <string name="title_section2">Payment</string>
@@ -9,6 +10,7 @@
     <string name="title_section4">Share</string>
     <string name="title_section5">Support</string>
     <string name="title_section6">About</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -18,5 +20,12 @@
 
     <string name="promotion_code_hint">Enter promotion code</string>
     <string name="promotion_button_apply">Apply</string>
+
+    <string name="share_googleplus">Share on G+</string>
+    <string name="share_fb">Share on Facebook</string>
+    <string name="share_wa">Share on Whatsapp</string>
+    <string name="share_twitter">Share on Twitter</string>
+
+    <string name="facebook_app_id">396977273804909</string>
 
 </resources>
