@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dzt.uberclone.AddPaymentFragment"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/addPayment_credit_card"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/addPayment_credit_card_hint"
+        android:paddingBottom="20dp"
+        />
+
+    <EditText
+        android:id="@+id/addPayment_mm"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/addPayment_mm_hint"
+        android:layout_below="@+id/addPayment_credit_card"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/addPayment_yy"
+        />
+
+    <EditText
+        android:id="@+id/addPayment_yy"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/addPayment_yy_hint"
+        android:layout_below="@+id/addPayment_credit_card"
+        android:layout_toLeftOf="@+id/addPayment_cvv"
+        />
+
+    <EditText
+        android:id="@+id/addPayment_cvv"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/addPayment_cvv_hint"
+        android:layout_below="@+id/addPayment_credit_card"
+        android:layout_alignParentRight="true"
+        />
+
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addPayment_country"
+        android:layout_below="@+id/addPayment_cvv"
+        android:layout_alignParentLeft="true"
+        android:entries="@array/addPayment_countries"
+        android:prompt="@string/addPayment_country_prompt"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <Button
+        android:id="@+id/addPayment_submit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addPayment_submit_text"
+        android:layout_below="@+id/addPayment_country"
+        />
+
+</RelativeLayout>
