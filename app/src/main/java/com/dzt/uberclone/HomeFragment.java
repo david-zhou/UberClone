@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment{
             if (parent != null)
                 parent.removeView(v);
         }
+
         try {
             v = inflater.inflate(R.layout.fragment_home, container, false);
         } catch (InflateException e) {

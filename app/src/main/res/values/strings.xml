@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">UberClone</string>
-
     <string name="title_section0">Home</string>
     <string name="title_section1">Profile</string>
     <string name="title_section2">Payment</string>
@@ -13,8 +12,18 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+
+    <string name="profile_account_title">Account</string>
+    <string name="profile_account_name">David</string>
+    <string name="profile_account_lastName">Zhou</string>
+    <string name="profile_account_email">zhoudic@hotmail.com</string>
+    <string name="profile_account_phoneNumber">+52 686 158 2192</string>
+    <string name="profile_account_places">Places</string>
+    <string name="profile_account_home">Add Home</string>
+    <string name="profile_account_work">Add Work</string>
 
     <string name="promotion_code_hint">Enter promotion code</string>
     <string name="promotion_button_apply">Apply</string>
