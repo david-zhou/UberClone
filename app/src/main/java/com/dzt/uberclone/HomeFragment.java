@@ -1,6 +1,9 @@
 package com.dzt.uberclone;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,6 +41,11 @@ public class HomeFragment extends Fragment{
     private LocationManager lm  = null;
     // locations instances to GPS and NETWORk
     private Location myLocationGPS, myLocationNetwork;
+    private ConnectionDetector cd;
+    private boolean isInternetConnected = false;
+    private AlertDialogManager alert = new AlertDialogManager();
+    private GPSTracker gps;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,24 +65,73 @@ public class HomeFragment extends Fragment{
         map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
 
+        /*
+        cd = new ConnectionDetector(getActivity().getApplicationContext());
+
+        isInternetConnected = cd.isConnectedToInternet();
+        if (!isInternetConnected) {
+            // Internet Connection is not present
+            alert.showAlertDialog(getActivity().getApplicationContext(), "Internet Connection Error",
+                    "Please connect to working Internet connection", false);
+            // stop executing code by return
+            return v;
+        }
+
+        gps = new GPSTracker(getActivity());
+
+        // check if GPS location can get
+        if (gps.canGetLocation()) {
+            Log.d("Your Location", "latitude:" + gps.getLatitude() + ", longitude: " + gps.getLongitude());
+        } else {
+            // Can't get user's current location
+            alert.showAlertDialog(getActivity().getApplicationContext(), "GPS Status",
+                    "Couldn't get location information. Please enable GPS",
+                    false);
+            // stop executing code by return
+            return v;
+            //System.exit(0);
+        }
+        */
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, true);
-        //Log.w("provider",provider);
-        Location myLocation = locationManager.getLastKnownLocation(provider);
 
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+            Location myLocation = locationManager.getLastKnownLocation(provider);
 
-        double latitude = myLocation.getLatitude();
-        double longitude = myLocation.getLongitude();
-        LatLng latLng = new LatLng(latitude, longitude);
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            double latitude = myLocation.getLatitude();
+            double longitude = myLocation.getLongitude();
+            LatLng latLng = new LatLng(latitude, longitude);
 
-        map.animateCamera(CameraUpdateFactory.zoomTo(16));
-        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!"));
+            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
+            map.animateCamera(CameraUpdateFactory.zoomTo(16));
+            map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!"));
+            return v;
+        }
+        else
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+            return v;
+        }
 
 
         /*
@@ -86,7 +143,7 @@ public class HomeFragment extends Fragment{
         */
         // the listener that gonna notify the activity about location changes
 
-        return v;
+        //return v;
     }
     class myLocationListener implements LocationListener {
         @Override
