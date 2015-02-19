@@ -2,11 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dzt.uberclone.AddWorkFragment">
+    tools:context="com.dzt.uberclone.AddWorkFragment"
+    android:layout_margin="20dp">
 
     <AutoCompleteTextView
         android:id="@+id/add_work_autocomplete"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/remove_work_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remove_work_button"
+        android:layout_below="@+id/add_work_autocomplete"/>
 
 </RelativeLayout>

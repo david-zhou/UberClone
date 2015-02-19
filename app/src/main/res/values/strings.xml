@@ -25,6 +25,9 @@
     <string name="profile_account_home">Add Home</string>
     <string name="profile_account_work">Add Work</string>
 
+        <string name="remove_home_button">Remove Home</string>
+        <string name="remove_work_button">Remove Work</string>
+
     <string name="promotion_code_hint">Enter promotion code</string>
     <string name="promotion_button_apply">Apply</string>
 

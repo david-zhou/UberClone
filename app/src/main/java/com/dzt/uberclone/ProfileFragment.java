@@ -40,11 +40,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         {
             default:
             case R.id.profile_account_home:
-                fragment = new AddHomeFragment();
+                fragment = new AddHomeFragment(true);
 
                 break;
             case R.id.profile_account_work:
-                fragment = new AddWorkFragment();
+                fragment = new AddWorkFragment(false);
 
                 break;
         }
