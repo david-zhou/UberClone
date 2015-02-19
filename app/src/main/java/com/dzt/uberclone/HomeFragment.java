@@ -6,28 +6,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
@@ -36,20 +25,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class HomeFragment extends Fragment{
     private GoogleMap map;
     private static View v;
-    private LocationListener listener = null;
-    // a location manager
-    private LocationManager lm  = null;
-    // locations instances to GPS and NETWORk
-    private Location myLocationGPS, myLocationNetwork;
-    private ConnectionDetector cd;
-    private boolean isInternetConnected = false;
-    private AlertDialogManager alert = new AlertDialogManager();
-    private GPSTracker gps;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         if (v != null) {
             ViewGroup parent = (ViewGroup) v.getParent();
             if (parent != null)
@@ -59,39 +37,11 @@ public class HomeFragment extends Fragment{
         try {
             v = inflater.inflate(R.layout.fragment_home, container, false);
         } catch (InflateException e) {
-        /* map is already there, just return view as it is */
+
         }
 
         map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
-
-        /*
-        cd = new ConnectionDetector(getActivity().getApplicationContext());
-
-        isInternetConnected = cd.isConnectedToInternet();
-        if (!isInternetConnected) {
-            // Internet Connection is not present
-            alert.showAlertDialog(getActivity().getApplicationContext(), "Internet Connection Error",
-                    "Please connect to working Internet connection", false);
-            // stop executing code by return
-            return v;
-        }
-
-        gps = new GPSTracker(getActivity());
-
-        // check if GPS location can get
-        if (gps.canGetLocation()) {
-            Log.d("Your Location", "latitude:" + gps.getLatitude() + ", longitude: " + gps.getLongitude());
-        } else {
-            // Can't get user's current location
-            alert.showAlertDialog(getActivity().getApplicationContext(), "GPS Status",
-                    "Couldn't get location information. Please enable GPS",
-                    false);
-            // stop executing code by return
-            return v;
-            //System.exit(0);
-        }
-        */
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -128,56 +78,9 @@ public class HomeFragment extends Fragment{
                             dialog.cancel();
                         }
                     });
-            final AlertDialog alert = builder.create();
+            AlertDialog alert = builder.create();
             alert.show();
             return v;
-        }
-
-
-        /*
-        // instantiates fields
-        lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        myLocationNetwork = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        myLocationGPS = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        listener = new myLocationListener();
-        */
-        // the listener that gonna notify the activity about location changes
-
-        //return v;
-    }
-    class myLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            // "location" is the RECEIVED locations and its here that you should proccess it
-            Toast.makeText(getActivity().getApplicationContext(),"hola",Toast.LENGTH_SHORT).show();
-            /*
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            LatLng latLng = new LatLng(latitude, longitude);
-
-            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-            map.animateCamera(CameraUpdateFactory.zoomTo(14));
-            map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("You are here!"));
-            */
-
-            // check if the incoming position has been received from GPS or network
-            if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                lm.removeUpdates(this);
-            } else {
-                lm.removeUpdates(listener);
-            }
-        }
-        @Override
-        public void onProviderDisabled(String provider) {
-            lm.removeUpdates(this);
-            lm.removeUpdates(listener);
-        }
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
 }
