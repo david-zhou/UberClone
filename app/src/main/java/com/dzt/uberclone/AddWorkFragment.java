@@ -1,5 +1,7 @@
 package com.dzt.uberclone;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -51,10 +53,25 @@ public class AddWorkFragment extends Fragment implements AdapterView.OnItemClick
             removeWorkButton.setOnClickListener(this);
         }
 
+        SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
+
+        String work =  sp.getString("work","Add Work");
+        if(!work.equals("Add Work"))
+        {
+            autoCompView.setText(work);
+        }
+
+
         return v;
     }
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         String str = (String) adapterView.getItemAtPosition(position);
+
+        SharedPreferences sp = getActivity().getSharedPreferences("Session",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sp.edit();
+        editor.putString("work", str);
+        editor.commit();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
         //Set Work
     }
 
@@ -63,6 +80,11 @@ public class AddWorkFragment extends Fragment implements AdapterView.OnItemClick
         switch(v.getId())
         {
             case R.id.remove_work_button:
+                SharedPreferences sp = getActivity().getSharedPreferences("Session",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor  = sp.edit();
+                editor.putString("work", "Add Work");
+                editor.commit();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 //remove work code
                 break;
         }

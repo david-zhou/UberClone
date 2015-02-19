@@ -1,6 +1,8 @@
 package com.dzt.uberclone;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,12 +44,25 @@ public class AddHomeFragment extends Fragment implements AdapterView.OnItemClick
         {
             removeHomeButton.setOnClickListener(this);
         }
+        SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
+
+        String home =  sp.getString("home","Add Home");
+        if(!home.equals("Add Home"))
+        {
+            autoCompView.setText(home);
+        }
 
         return v;
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         String str = (String) adapterView.getItemAtPosition(position);
+
+        SharedPreferences sp = getActivity().getSharedPreferences("Session",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sp.edit();
+        editor.putString("home", str);
+        editor.commit();
+        getActivity().getSupportFragmentManager().popBackStackImmediate();
         //Set Home
     }
 
@@ -57,6 +72,11 @@ public class AddHomeFragment extends Fragment implements AdapterView.OnItemClick
         {
             case R.id.remove_home_button:
                 //remove home code
+                SharedPreferences sp = getActivity().getSharedPreferences("Session",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor  = sp.edit();
+                editor.putString("home", "Add Home");
+                editor.commit();
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
                 break;
         }
     }
