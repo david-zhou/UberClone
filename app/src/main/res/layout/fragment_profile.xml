@@ -90,7 +90,15 @@
         android:layout_below="@+id/profile_account_home"
         android:drawableLeft="@drawable/work_icon"
         android:drawablePadding="20dp"
+        android:layout_marginBottom="30dp"
         />
+
+    <Button
+        android:id="@+id/profile_logOut"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_logOut"
+        android:layout_below="@+id/profile_account_work"/>
 
 
 </RelativeLayout>

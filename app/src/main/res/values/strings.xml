@@ -24,6 +24,7 @@
     <string name="profile_account_places">Places</string>
     <string name="profile_account_home">Add Home</string>
     <string name="profile_account_work">Add Work</string>
+    <string name="profile_logOut">Log Out</string>
 
         <string name="remove_home_button">Remove Home</string>
         <string name="remove_work_button">Remove Work</string>
@@ -36,6 +37,9 @@
     <string name="share_wa">Share on Whatsapp</string>
     <string name="share_twitter">Share on Twitter</string>
     <string name="share_title"><b>Share on your social media</b></string>
+
+    <string name="payment_title">Your cards</string>
+    <string name="payment_share">Earn free rides by refering friends <br>Code: </br></string>
 
     <string name="addPayment_credit_card_hint">Credit Card Number</string>
     <string name="addPayment_mm_hint">MM</string>
