@@ -1,0 +1,88 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dzt.uberclone.SignupFragment"
+    android:layout_margin="20dp">
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup_fb"
+        android:layout_alignParentLeft="true"
+        android:text="@string/signup_fb"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup_gp"
+        android:layout_alignParentRight="true"
+        android:text="@string/signup_gp"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/signup_name"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_name"
+        android:layout_below="@+id/signup_gp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/signup_lastname"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_lastname"
+        android:layout_below="@+id/signup_gp"
+        android:layout_alignParentRight="true"
+        />
+
+    <EditText
+        android:id="@+id/signup_email"
+        android:inputType="textEmailAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_email"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/signup_name"
+        android:layout_marginBottom="20dp"/>
+
+    <Spinner
+        android:id="@+id/signup_country"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signup_email"
+        android:layout_alignParentLeft="true"
+        android:entries="@array/addPayment_countries"
+        android:layout_marginBottom="25dp"/>
+
+    <EditText
+        android:id="@+id/signup_phone"
+        android:maxLength="10"
+        android:inputType="phone"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_phone"
+        android:layout_below="@+id/signup_email"
+        android:layout_alignParentRight="true"/>
+
+    <EditText
+        android:id="@+id/signup_password"
+        android:inputType="textPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_password"
+        android:layout_below="@+id/signup_country"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup_next"
+        android:text="@string/signup_next"
+        android:layout_below="@+id/signup_password"/>
+
+</RelativeLayout>

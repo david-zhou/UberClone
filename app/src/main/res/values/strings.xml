@@ -2,6 +2,20 @@
 <resources>
 
     <string name="app_name">UberClone</string>
+
+    <string name="login_button">Log In</string>
+    <string name="signup_button">Sign Up</string>
+
+        <string name="signup_fb">Sign up with FB</string>
+        <string name="signup_gp">Sign up with G+</string>
+        <string name="signup_name">Name</string>
+        <string name="signup_lastname">Last Name</string>
+        <string name="signup_email">Email</string>
+        <string name="signup_phone">Phone number</string>
+        <string name="signup_password">Password</string>
+        <string name="signup_next">Next</string>
+
+
     <string name="title_section0">Home</string>
     <string name="title_section1">Profile</string>
     <string name="title_section2">Payment</string>
@@ -26,8 +40,8 @@
     <string name="profile_account_work">Add Work</string>
     <string name="profile_logOut">Log Out</string>
 
-        <string name="remove_home_button">Remove Home</string>
-        <string name="remove_work_button">Remove Work</string>
+    <string name="remove_home_button">Remove Home</string>
+    <string name="remove_work_button">Remove Work</string>
 
     <string name="promotion_code_hint">Enter promotion code</string>
     <string name="promotion_button_apply">Apply</string>
@@ -65,5 +79,11 @@
         <item>Japan</item>
         <item>Russia</item>
     </string-array>
+
+
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

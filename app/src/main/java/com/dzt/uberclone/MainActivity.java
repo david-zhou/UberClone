@@ -161,7 +161,7 @@ public class MainActivity extends ActionBarActivity
     public void onBackPressed() {
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 1) {
-            System.exit(0);
+            finish();
         }
         super.onBackPressed();
     }

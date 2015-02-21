@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         homeTextView.setOnClickListener(this);
         TextView workTextView = (TextView) v.findViewById(R.id.profile_account_work);
         workTextView.setOnClickListener(this);
+        Button logOut = (Button) v.findViewById(R.id.profile_logOut);
+        logOut.setOnClickListener(this);
 
         SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
 
@@ -51,6 +54,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             // set icon to edit
         }
 
+        TextView name = (TextView) v.findViewById(R.id.profile_account_name);
+        TextView lastname = (TextView) v.findViewById(R.id.profile_account_lastName);
+        TextView email = (TextView) v.findViewById(R.id.profile_account_email);
+        TextView telephone = (TextView) v.findViewById(R.id.profile_account_phoneNumber);
+        name.setText(sp.getString("name","default name"));
+        lastname.setText(sp.getString("last name","default last name"));
+        email.setText(sp.getString("email", "default email"));
+        telephone.setText(sp.getString("phone", "default phone"));
 
         return v;
     }
@@ -66,14 +77,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             default:
             case R.id.profile_account_home:
                 fragment = new AddHomeFragment(hasHome);
-
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment).addToBackStack("addhome")
+                        .commit();
                 break;
             case R.id.profile_account_work:
                 fragment = new AddWorkFragment(hasWork);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment).addToBackStack("addhome")
+                        .commit();
+                break;
+            case R.id.profile_logOut:
+                logout();
                 break;
         }
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment).addToBackStack("addhome")
-                .commit();
+
+    }
+    public void logout()
+    {
+        SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.commit();
+        //TODO logout
     }
 }
