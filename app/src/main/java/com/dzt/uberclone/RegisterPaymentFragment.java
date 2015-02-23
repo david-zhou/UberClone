@@ -7,15 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener{
+public class RegisterPaymentFragment extends Fragment implements View.OnClickListener{
 
     View v;
-    public LoginFragment() {
+    public RegisterPaymentFragment() {
         // Required empty public constructor
     }
 
@@ -24,9 +25,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_login, container, false);
-        Button login = (Button) v.findViewById(R.id.login_login);
-        login.setOnClickListener(this);
+        v = inflater.inflate(R.layout.fragment_register_payment, container, false);
+
+        Button registerCard = (Button) v.findViewById(R.id.registerPayment_registerCard);
+        registerCard.setOnClickListener(this);
+
         return v;
     }
 
@@ -35,10 +38,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         switch(v.getId())
         {
             default:
-            case R.id.login_login:
-                //TODO validate login
+            case R.id.registerPayment_registerCard:
+                //TODO validate card
+                Toast.makeText(getActivity(),"Validating card",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
+
 
 }

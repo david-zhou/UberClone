@@ -5,6 +5,43 @@
     tools:context="com.dzt.uberclone.LoginFragment"
     android:layout_margin="20dp">
 
-    
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_fb"
+        android:layout_alignParentLeft="true"
+        android:text="@string/login_fb"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_gp"
+        android:layout_alignParentRight="true"
+        android:text="@string/login_gp"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/login_email"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_fb"
+        android:hint="@string/signup_email"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_email"
+        android:hint="@string/signup_password"
+        android:layout_marginBottom="50dp"/>
+
+    <Button
+        android:id="@+id/login_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_password"
+        android:text="@string/login_login"/>
 
 </RelativeLayout>

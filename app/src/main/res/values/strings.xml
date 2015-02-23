@@ -15,6 +15,10 @@
         <string name="signup_password">Password</string>
         <string name="signup_next">Next</string>
 
+        <string name="login_fb">Log in with FB</string>
+        <string name="login_gp">Log in with G+</string>
+        <string name="login_login">Log in</string>
+
 
     <string name="title_section0">Home</string>
     <string name="title_section1">Profile</string>
@@ -61,6 +65,9 @@
     <string name="addPayment_cvv_hint">CVV</string>
     <string name="addPayment_submit_text">ADD PAYMENT</string>
     <string name="addPayment_country_prompt">Choose your country</string>
+
+    <string name="registerPayment_postalCode">Postal code</string>
+    <string name="registerPayment_registerCard">Register card</string>
 
     <string name="facebook_app_id">396977273804909</string>
 

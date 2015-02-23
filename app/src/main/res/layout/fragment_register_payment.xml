@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dzt.uberclone.RegisterPaymentFragment"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/registerPayment_credit_card"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="16"
+        android:hint="@string/addPayment_credit_card_hint"
+        android:layout_marginBottom="20dp"
+        />
+
+    <EditText
+        android:id="@+id/registerPayment_mm"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="2"
+        android:hint="@string/addPayment_mm_hint"
+        android:layout_below="@+id/registerPayment_credit_card"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/registerPayment_yy"
+        />
+
+    <EditText
+        android:id="@+id/registerPayment_yy"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="2"
+        android:hint="@string/addPayment_yy_hint"
+        android:layout_below="@+id/registerPayment_credit_card"
+        android:layout_toLeftOf="@+id/registerPayment_cvv"
+        />
+
+    <EditText
+        android:id="@+id/registerPayment_cvv"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="3"
+        android:hint="@string/addPayment_cvv_hint"
+        android:layout_below="@+id/registerPayment_credit_card"
+        android:layout_alignParentRight="true"
+        />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerPayment_country"
+        android:layout_below="@+id/registerPayment_mm"
+        android:layout_alignParentLeft="true"
+        android:entries="@array/addPayment_countries"
+        android:prompt="@string/addPayment_country_prompt"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        />
+
+    <EditText
+        android:id="@+id/registerPayment_postalCode"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="5"
+        android:layout_below="@+id/registerPayment_mm"
+        android:layout_alignParentRight="true"
+        android:hint="@string/registerPayment_postalCode"/>
+
+    <Button
+        android:id="@+id/registerPayment_registerCard"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/registerPayment_registerCard"
+        android:layout_below="@+id/registerPayment_country"
+        />
+
+</RelativeLayout>
