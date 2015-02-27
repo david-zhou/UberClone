@@ -4,6 +4,7 @@ package com.dzt.uberclone;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,7 +116,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener{
             email.setError(null);
         }
 
-        if(phone.getText().toString().trim().length() < 10)
+        if(phone.getText().toString().trim().length() < 10 || !Patterns.PHONE.matcher(phone.getText()).matches())
         {
             phone.setError("Enter a 10 digit phone number");
             valid = false;

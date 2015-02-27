@@ -2,6 +2,7 @@ package com.dzt.uberclone;
 
 //import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -99,6 +100,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         SharedPreferences.Editor editor = sp.edit();
         editor.clear();
         editor.commit();
-        //TODO logout
+
+        startActivity(new Intent(getActivity(), InitialActivity.class));
+        getActivity().finish();
     }
 }
