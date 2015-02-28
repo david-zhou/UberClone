@@ -52,7 +52,6 @@ public class SignupFragment extends Fragment implements View.OnClickListener{
         {
             default:
             case R.id.signup_next:
-                //TODO validate fields
                 if(validate_signup_fields())
                 {
                     Fragment fragment = new RegisterPaymentFragment();

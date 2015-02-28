@@ -161,8 +161,31 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         String phone = userdata.getString("phone");
                         editor.putString("email", email);
                         editor.putString("name", name);
-                        editor.putString("lastname", lastname);
+                        editor.putString("last name", lastname);
                         editor.putString("phone", phone);
+
+                        String home = userdata.getString("home");
+                        if(!home.equals(""))
+                        {
+                            String homelat = userdata.getString("home_lat");
+                            String homelong = userdata.getString("home_long");
+
+                            editor.putString("home", home);
+                            editor.putString("homelat", homelat);
+                            editor.putString("homelong", homelong);
+                        }
+
+                        String work = userdata.getString("work");
+                        if(!work.equals(""))
+                        {
+                            String worklat = userdata.getString("work_lat");
+                            String worklong = userdata.getString("work_long");
+
+                            editor.putString("work", work);
+                            editor.putString("worklat", worklat);
+                            editor.putString("worklong", worklong);
+                        }
+
                         editor.commit();
 
 

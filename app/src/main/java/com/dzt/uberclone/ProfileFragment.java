@@ -21,7 +21,6 @@ import org.w3c.dom.Text;
  */
 public class ProfileFragment extends Fragment implements View.OnClickListener{
     View v;
-    boolean hasHome = false, hasWork = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,22 +36,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
 
-        String home =  sp.getString("home","Add Home");
-        homeTextView.setText(home);
-        if(!home.equals("Add Home"))
+        String home =  sp.getString("home","");
+        if(home.equals(""))
         {
-            hasHome = true;
+            homeTextView.setText("Add Home");
+        }
+        else
+        {
+            homeTextView.setText(home);
             homeTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.home_icon, 0, android.R.drawable.ic_menu_edit,0);
-            // set icon to edit
         }
 
-        String work = sp.getString("work","Add Work");
-        workTextView.setText(work);
-        if (!work.equals("Add Work"))
+        String work = sp.getString("work","");
+        if(work.equals(""))
         {
-            hasWork = true;
+            workTextView.setText("Add Work");
+        }
+        else
+        {
+            workTextView.setText(work);
             workTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.work_icon, 0, android.R.drawable.ic_menu_edit,0);
-            // set icon to edit
         }
 
         TextView name = (TextView) v.findViewById(R.id.profile_account_name);
@@ -77,13 +80,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         {
             default:
             case R.id.profile_account_home:
-                fragment = new AddHomeFragment(hasHome);
+                fragment = new AddHomeFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment).addToBackStack("addhome")
                         .commit();
                 break;
             case R.id.profile_account_work:
-                fragment = new AddWorkFragment(hasWork);
+                fragment = new AddWorkFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment).addToBackStack("addhome")
                         .commit();

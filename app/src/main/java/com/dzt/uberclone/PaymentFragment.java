@@ -48,7 +48,6 @@ public class PaymentFragment extends Fragment implements View.OnClickListener{
         ccListView.setAdapter(adapter);
 
         //TODO agregar el codigo de referral
-        //TODO populate the cards
 
 
         return v;
