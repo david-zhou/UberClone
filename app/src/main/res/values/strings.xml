@@ -22,6 +22,8 @@
     <string name="title_section4">Share</string>
     <string name="title_section5">Support</string>
     <string name="title_section6">About</string>
+
+    <string name="home_pickup_title">Select pick up location</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -55,7 +57,7 @@
     <string name="registerPayment_postalCode">Postal code</string>
     <string name="registerPayment_registerCard">Register card</string>
     <string name="facebook_app_id">396977273804909</string>
-    <string name="ip">http://192.168.1.209:8000/</string>
+    <string name="ip">http://192.168.0.18:8000/</string>
 
     <string-array name="addPayment_countries">
         <item>Country</item>

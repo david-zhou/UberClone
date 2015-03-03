@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dzt.uberclone.SelectLocationFragment"
+    android:layout_margin="20dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/select_pickup_location_autocomplete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"/>
+
+    <TextView android:id="@+id/select_location_home"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_pickup_location_autocomplete"
+        android:drawableLeft="@drawable/home_icon"
+        android:drawablePadding="20dp"
+        android:layout_marginBottom="20dp"
+        />
+
+    <TextView android:id="@+id/select_location_work"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/select_location_home"
+        android:drawableLeft="@drawable/work_icon"
+        android:drawablePadding="20dp"
+        android:layout_marginBottom="30dp"
+        />
+
+
+</RelativeLayout>

@@ -1,7 +1,10 @@
 package com.dzt.uberclone;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,20 +18,41 @@ public class InitialActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_initial);
 
-        SharedPreferences sp = getSharedPreferences("Session", MODE_PRIVATE);
-        String email = sp.getString("email", "default");
-
-        if (email.equals("default"))
+        LocationManager locationManager =(LocationManager) getSystemService(LOCATION_SERVICE);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            SharedPreferences sp = getSharedPreferences("Session", MODE_PRIVATE);
+            String email = sp.getString("email", "default");
+
+            if (email.equals("default"))
+            {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+            else
+            {
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            }
         }
         else
         {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
-
 
     }
 
