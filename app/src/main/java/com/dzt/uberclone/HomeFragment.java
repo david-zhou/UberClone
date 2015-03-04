@@ -63,6 +63,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     TextView selectPickup;
     Button requestuber;
     LatLng currentLocation;
+    int shortestTime;
+    int nearbyUbers, ubercount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -238,7 +240,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                     stringBuilder.append(line);
                 }
 
-                if(action.equals("geocoder inverse") || action.equals("get nearby ubers"))
+                if(action.equals("geocoder inverse") || action.equals("get nearby ubers") || action.equals("get shortest time"))
                 {
                     return stringBuilder.toString();
                 }
@@ -280,19 +282,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                 {
                     try
                     {
+                        shortestTime = 0;
                         JSONArray jsonArray = new JSONArray(result);
-                        for(int i = 0; i<jsonArray.length(); i++)
+                        nearbyUbers = jsonArray.length();
+                        ubercount = 0;
+                        if(nearbyUbers == 0)
+                        {
+                            displayNoUbersMessage();
+                        }
+                        for(int i = 0; i<nearbyUbers; i++)
                         {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             double lat = jsonObject.getDouble("pos_lat");
                             double lon = jsonObject.getDouble("pos_long");
                             addUberMarker(lat,lon);
+                            getShortestTime(lat, lon);
                         }
+
 
                     }
                     catch(JSONException e)
                     {
                         e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    if (action.equals("get shortest time"))
+                    {
+                        try
+                        {
+                            JSONObject jsonObject = new JSONObject(result);
+                            int shortestTimeTemp = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getInt("value");
+                            shortestTime += shortestTimeTemp;
+                            ubercount++;
+                            if(ubercount == nearbyUbers)
+                            {
+                                displayShortestTime(shortestTime, ubercount);
+                            }
+
+                        }
+                        catch(JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -318,5 +351,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     public void addUberMarker(double lat, double lon)
     {
         map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5f,0.5f)); //.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5,0.5)
+    }
+
+    public void getShortestTime(double uberlat, double uberlon)
+    {
+        URLpetition petition = new URLpetition("get shortest time");
+        StringBuilder sb = new StringBuilder();
+        sb.append("http://maps.googleapis.com/maps/api/directions/json?origin=");
+        sb.append(uberlat);
+        sb.append(",");
+        sb.append(uberlon);
+        sb.append("&destination=");
+        sb.append(currentLocation.latitude);
+        sb.append(",");
+        sb.append(currentLocation.longitude);
+        sb.append("&mode=driving&sensor=false");
+        petition.execute(sb.toString());
+    }
+
+    public void displayShortestTime(int time, int ubers)
+    {
+        int avg = time/ubers;
+        Toast.makeText(getActivity(), "Estimate time = "+avg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void displayNoUbersMessage()
+    {
+        Toast.makeText(getActivity(), "There are no Ubers near this location", Toast.LENGTH_SHORT).show();
     }
 }
