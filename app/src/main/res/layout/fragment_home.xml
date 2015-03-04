@@ -18,6 +18,18 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/edittextborder"/>
+        android:background="@drawable/edittextborder"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="10dp"/>
+
+    <Button
+        android:id="@+id/request_uber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/request_uber"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
 </RelativeLayout>
