@@ -10,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     LatLng currentLocation;
     int shortestTime;
     int nearbyUbers, ubercount;
+    boolean syncWithServer = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
         map.setOnMarkerDragListener(this);
 
         requestuber = (Button) v.findViewById(R.id.request_uber);
+        requestuber.setOnClickListener(this);
 
         SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor;
@@ -140,6 +144,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                         .replace(R.id.container, fragment).addToBackStack("selectlocation")
                         .commit();
                 break;
+            case R.id.request_uber:
+                SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
+                String email = sp.getString("email", "");
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(getResources().getString(R.string.ip));
+                sb.append("uber/request/send?user_id=");
+                sb.append(email);
+                sb.append("&user_lat=");
+                sb.append(currentLocation.latitude);
+                sb.append("&user_lon=");
+                sb.append(currentLocation.longitude);
+
+                URLpetition petition = new URLpetition("send uber request");
+                petition.execute(sb.toString());
+
+                break;
         }
     }
 
@@ -186,6 +207,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     public void onMapClick(LatLng latLng) {
         //poner un pin y cambiar la direccion
         currentLocation = latLng;
+
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        map.animateCamera(CameraUpdateFactory.zoomTo(16));
         map.clear();
         map.addMarker(new MarkerOptions().position(latLng).title("Pick me up here").draggable(true)); //.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5,0.5)
 
@@ -240,7 +265,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                     stringBuilder.append(line);
                 }
 
-                if(action.equals("geocoder inverse") || action.equals("get nearby ubers") || action.equals("get shortest time"))
+                if(action.equals("geocoder inverse") || action.equals("get nearby ubers") || action.equals("get shortest time") || action.equals("send uber request"))
                 {
                     return stringBuilder.toString();
                 }
@@ -320,11 +345,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                             {
                                 displayShortestTime(shortestTime, ubercount);
                             }
-
                         }
                         catch(JSONException e)
                         {
                             e.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        if (action.equals("send uber request"))
+                        {
+                            // TODO sync with server until a driver accepts
+                            try
+                            {
+                                JSONObject jsonObject = new JSONObject(result);
+                                int pendingrideid = jsonObject.getInt("pending_ride_id");
+                                waitForUberDriver(pendingrideid);
+                            }
+                            catch(JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                            showMSG("Waiting for a driver to accept");
+
+                            // TODO disable things
                         }
                     }
                 }
@@ -334,6 +379,75 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
         @Override
         protected void onPreExecute() {}
     }
+
+    public void waitForUberDriver(final int pendingrideid)
+    {
+        Thread timer = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true)
+                {
+                    if (syncWithServer)
+                    {
+                        String response = syncForUber(pendingrideid);
+                        threadMsg(response);
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            private void threadMsg(String msg) {
+                if (!msg.equals(null) && !msg.equals("")) {
+                    Message msgObj = handler.obtainMessage();
+                    Bundle b = new Bundle();
+                    b.putString("message", msg);
+                    msgObj.setData(b);
+                    handler.sendMessage(msgObj);
+                }
+            }
+
+            private final Handler handler = new Handler() {
+
+                public void handleMessage(Message msg) {
+
+                    String aResponse = msg.getData().getString("message");
+
+                    if ((null != aResponse))
+                    {
+
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(),"Not Got Response From Server.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+        });
+
+    }
+
+    public String syncForUber(int pendingrideid)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getResources().getString(R.string.ip));
+        sb.append("uber/request/pending?pendingride=");
+        sb.append(pendingrideid);
+
+
+        return "";
+    }
+
     public void getNearbyUbers()
     {
         URLpetition petition = new URLpetition("get nearby ubers");
@@ -378,5 +492,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     public void displayNoUbersMessage()
     {
         Toast.makeText(getActivity(), "There are no Ubers near this location", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showMSG(String msg)
+    {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }
