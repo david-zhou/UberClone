@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     private GoogleApiClient mGoogleApiClient;
     double latitude, longitude;
     boolean centerOnCurrent = true;
-    TextView selectPickup;
+    TextView selectPickup, statusText;
     Button requestuber;
     LatLng currentLocation;
     int shortestTime;
@@ -92,6 +92,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
 
         requestuber = (Button) v.findViewById(R.id.request_uber);
         requestuber.setOnClickListener(this);
+        statusText = (TextView) v.findViewById(R.id.status_text);
+        statusText.setVisibility(View.INVISIBLE);
 
         SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor;
@@ -355,7 +357,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                     {
                         if (action.equals("send uber request"))
                         {
-                            // TODO sync with server until a driver accepts
                             try
                             {
                                 JSONObject jsonObject = new JSONObject(result);
@@ -369,7 +370,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
 
                             showMSG("Waiting for a driver to accept");
 
-                            // TODO disable things
+                            requestuber.setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -382,13 +383,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
 
     public void waitForUberDriver(final int pendingrideid)
     {
+        Log.i("log", "0");
         Thread timer = new Thread(new Runnable() {
             @Override
             public void run() {
                 while(true)
                 {
+                    Log.i("log", "1");
                     if (syncWithServer)
                     {
+                        Log.i("log", "2");
                         String response = syncForUber(pendingrideid);
                         threadMsg(response);
                     }
@@ -422,10 +426,45 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                 public void handleMessage(Message msg) {
 
                     String aResponse = msg.getData().getString("message");
-
+                    Log.i("aresponse", aResponse);
                     if ((null != aResponse))
                     {
+                        if(aResponse.equals("Waiting"))
+                        {
+                            statusText.setVisibility(View.VISIBLE);
+                            statusText.setText("Waiting for a driver to accept");
+                        }
+                        else
+                        {
+                            try
+                            {
+                                JSONObject jsonObject = new JSONObject(aResponse);
+                                String name = jsonObject.getString("driver_name");
+                                String lastname = jsonObject.getString("driver_last_name");
+                                String vehicle = jsonObject.getString("vehicle");
+                                String plate = jsonObject.getString("license_plate");
 
+                                StringBuilder sb = new StringBuilder();
+                                sb.append("Your driver is ");
+                                sb.append(name);
+                                sb.append(" " + lastname);
+                                sb.append("\n");
+                                sb.append(vehicle);
+                                sb.append(" " + plate);
+
+                                statusText.setVisibility(View.VISIBLE);
+                                statusText.setText(sb.toString());
+
+
+                            }
+                            catch(JSONException e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                            //poner los datos del chofer
+                            syncWithServer = false;
+                        }
                     }
                     else
                     {
@@ -434,18 +473,36 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                 }
             };
         });
-
+        timer.start();
     }
 
     public String syncForUber(int pendingrideid)
     {
         StringBuilder sb = new StringBuilder();
         sb.append(getResources().getString(R.string.ip));
-        sb.append("uber/request/pending?pendingride=");
+        sb.append("uber/request/pending?pendingrideid=");
         sb.append(pendingrideid);
 
-
-        return "";
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(sb.toString());
+        Log.i("URL = ",sb.toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            HttpResponse response = client.execute(get);
+            HttpEntity entity = response.getEntity();
+            //InputStream stream = new InputStream(entity.getContent(),"UTF-8");
+            InputStream stream = entity.getContent();
+            BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            String line;
+            while ((line = r.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
     }
 
     public void getNearbyUbers()

@@ -32,4 +32,14 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
 
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/request_uber"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edittextborder"/>
+
 </RelativeLayout>
