@@ -62,14 +62,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     private static View v;
     private GoogleApiClient mGoogleApiClient;
     double latitude, longitude;
-    boolean centerOnCurrent = true;
+    boolean centerOnCurrent = true, syncWithServer = true, trackDriverBoolean = true, waitForRideToEnd = true;
     TextView selectPickup, statusText;
     Button requestuber;
     LatLng currentLocation;
     int shortestTime;
     int nearbyUbers, ubercount;
-    boolean syncWithServer = true;
-    String driverid = "";
+    String driverid = "", currentRideId = "";
     ArrayList<Marker> markers = new ArrayList<Marker>();
 
     @Override
@@ -338,10 +337,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
             public void run() {
                 while(true)
                 {
-                    Log.i("log", "1");
                     if (syncWithServer)
                     {
-                        Log.i("log", "2");
                         String response = syncForUber(pendingrideid);
                         threadMsg(response);
                     }
@@ -409,6 +406,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
             String lastname = jsonObject.getString("driver_last_name");
             String vehicle = jsonObject.getString("vehicle");
             String plate = jsonObject.getString("license_plate");
+            currentRideId = jsonObject.getString("rideid");
 
             StringBuilder sb = new StringBuilder();
             sb.append("Your driver is ");
@@ -433,12 +431,150 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
 
     private void removeUbers()
     {
-        map.clear();
+        int l = markers.size();
+        for (int i = 0; i < l; i++)
+        {
+            markers.get(i).remove();
+        }
     }
 
     private void trackDriver()
     {
+        trackDriverBoolean = true;
+        Thread trackdriverthread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true)
+                {
+                    if (trackDriverBoolean)
+                    {
+                        String response = trackDriverPosition();
+                        threadMsg(response);
+                    }
+                    else
+                    {
+                        return;
+                    }
 
+                    try
+                    {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            private void threadMsg(String msg) {
+                if (!msg.equals(null) && !msg.equals("")) {
+                    Message msgObj = handler.obtainMessage();
+                    Bundle b = new Bundle();
+                    b.putString("message", msg);
+                    msgObj.setData(b);
+                    handler.sendMessage(msgObj);
+                }
+            }
+
+            private final Handler handler = new Handler() {
+
+                public void handleMessage(Message msg) {
+
+                    String aResponse = msg.getData().getString("message");
+                    Log.i("aresponse", aResponse);
+                    if ((null != aResponse))
+                    {
+                        handleDriverTracking(aResponse);
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(),"Not Got Response From Server.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+        });
+        trackdriverthread.start();
+    }
+
+    private String trackDriverPosition()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getResources().getString(R.string.ip));
+        sb.append("uber/ride/track?rideid=");
+        sb.append(currentRideId);
+
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(sb.toString());
+        Log.i("URL = ",sb.toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            HttpResponse response = client.execute(get);
+            HttpEntity entity = response.getEntity();
+            //InputStream stream = new InputStream(entity.getContent(),"UTF-8");
+            InputStream stream = entity.getContent();
+            BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            String line;
+            while ((line = r.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
+    private void handleDriverTracking(String json)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(json);
+            if (jsonObject.has("fee"))
+            {
+                trackDriverBoolean = false;
+                double initialLat = jsonObject.getDouble("initial_lat");
+                double initialLng = jsonObject.getDouble("initial_lng");
+                double finalLat = jsonObject.getDouble("final_lat");
+                double finalLng = jsonObject.getDouble("final_lng");
+                String distance = jsonObject.getString("distance");
+                String time = jsonObject.getString("time");
+                String fee = jsonObject.getString("fee");
+                String finalFee = jsonObject.getString("final_fee");
+                StringBuilder sb = new StringBuilder();
+                sb.append("You went from ");
+                sb.append(initialLat);
+                sb.append(",");
+                sb.append(initialLng);
+                sb.append(" to ");
+                sb.append(finalLat);
+                sb.append(",");
+                sb.append(finalLng);
+                sb.append(". Your time was ");
+                sb.append(time);
+                sb.append(" minutes and rode a distance of ");
+                sb.append(distance);
+                sb.append(" KM. Your fee is $");
+                sb.append(fee);
+                sb.append(" and your adjusted fee is $");
+                sb.append(finalFee);
+
+                Log.i("ride details", sb.toString());
+                Toast.makeText(getActivity(), sb.toString(), Toast.LENGTH_LONG).show();
+
+                // TODO show ride details
+            }
+            else
+            {
+                double lat = jsonObject.getDouble("latitude");
+                double lng = jsonObject.getDouble("longitude");
+                addAssignedUberMarker(lat, lng);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public String syncForUber(int pendingrideid)
@@ -488,6 +624,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     {
         Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5f,0.5f));
         markers.add(marker);
+    }
+
+    private void addAssignedUberMarker(double lat, double lon)
+    {
+        map.clear();
+        map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5f,0.5f));
     }
 
     public void getShortestTime(double uberlat, double uberlon)
