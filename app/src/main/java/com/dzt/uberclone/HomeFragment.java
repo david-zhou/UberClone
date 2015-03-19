@@ -52,6 +52,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * Created by David on 2/10/2015.
@@ -68,6 +69,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     int shortestTime;
     int nearbyUbers, ubercount;
     boolean syncWithServer = true;
+    String driverid = "";
+    ArrayList<Marker> markers = new ArrayList<Marker>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
         try {
             v = inflater.inflate(R.layout.fragment_home, container, false);
         } catch (InflateException e) {
-
+            e.printStackTrace();
         }
 
         map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -241,149 +244,95 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
         petition.execute("http://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.latitude+","+latLng.longitude+"&sensor=false");
     }
 
-
-    private class URLpetition extends AsyncTask<String, Void, String>
+    private void postSendUberRequest(String json)
     {
-        String action;
-        public URLpetition(String action)
+        try
         {
-            this.action = action;
+            JSONObject jsonObject = new JSONObject(json);
+            int pendingrideid = jsonObject.getInt("pending_ride_id");
+            waitForUberDriver(pendingrideid);
         }
-        @Override
-        protected String doInBackground(String... params) {
-            HttpClient client = new DefaultHttpClient();
-            Log.d("url = ", params[0]);
-            HttpGet get = new HttpGet(params[0]);
-            String retorno="";
-            StringBuilder stringBuilder = new StringBuilder();
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        showMSG("Waiting for a driver to accept");
+
+        requestuber.setVisibility(View.INVISIBLE);
+    }
+
+    private void showShortestTime(String json)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(json);
+            int shortestTimeTemp = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getInt("value");
+            shortestTime += shortestTimeTemp;
+            ubercount++;
+            if(ubercount == nearbyUbers)
+            {
+                displayShortestTime(shortestTime, ubercount);
+            }
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    private void setLocationName(String json)
+    {
+        String locationname="";
+        try {
+            JSONObject jsonObject = new JSONObject(json);
             try {
-                HttpResponse response = client.execute(get);
-                HttpEntity entity = response.getEntity();
-                //InputStream stream = new InputStream(entity.getContent(),"UTF-8");
-                InputStream stream = entity.getContent();
-                BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-                String line;
-                while ((line= r.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
 
-                if(action.equals("geocoder inverse") || action.equals("get nearby ubers") || action.equals("get shortest time") || action.equals("send uber request"))
-                {
-                    return stringBuilder.toString();
-                }
-            }
-            catch(IOException e) {
-                Log.d("Error: ", e.getMessage());
-            }
-            Log.d("Return text = ", retorno);
-            return retorno;
-        }
+                locationname = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
+                        .getString("formatted_address");
 
-        @Override
-        protected void onPostExecute(String result) {
-            if (action.equals("geocoder inverse"))
-            {
-                String locationname="";
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    try {
-
-                        locationname = ((JSONArray) jsonObject.get("results")).getJSONObject(0)
-                                .getString("formatted_address");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                catch(JSONException e)
-                {
-                    e.printStackTrace();
-                }
-                Log.d("location = ", locationname);
-                selectPickup.setText(locationname);
-                getNearbyUbers();
-            }
-            else
-            {
-                if(action.equals("get nearby ubers"))
-                {
-                    try
-                    {
-                        shortestTime = 0;
-                        JSONArray jsonArray = new JSONArray(result);
-                        nearbyUbers = jsonArray.length();
-                        ubercount = 0;
-                        if(nearbyUbers == 0)
-                        {
-                            displayNoUbersMessage();
-                        }
-                        for(int i = 0; i<nearbyUbers; i++)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            double lat = jsonObject.getDouble("pos_lat");
-                            double lon = jsonObject.getDouble("pos_long");
-                            addUberMarker(lat,lon);
-                            getShortestTime(lat, lon);
-                        }
-
-
-                    }
-                    catch(JSONException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    if (action.equals("get shortest time"))
-                    {
-                        try
-                        {
-                            JSONObject jsonObject = new JSONObject(result);
-                            int shortestTimeTemp = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getInt("value");
-                            shortestTime += shortestTimeTemp;
-                            ubercount++;
-                            if(ubercount == nearbyUbers)
-                            {
-                                displayShortestTime(shortestTime, ubercount);
-                            }
-                        }
-                        catch(JSONException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                    {
-                        if (action.equals("send uber request"))
-                        {
-                            try
-                            {
-                                JSONObject jsonObject = new JSONObject(result);
-                                int pendingrideid = jsonObject.getInt("pending_ride_id");
-                                waitForUberDriver(pendingrideid);
-                            }
-                            catch(JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                            showMSG("Waiting for a driver to accept");
-
-                            requestuber.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        Log.d("location = ", locationname);
+        selectPickup.setText(locationname);
+        getNearbyUbers();
+    }
 
-        @Override
-        protected void onPreExecute() {}
+    private void showUberMarkers(String json)
+    {
+        try
+        {
+            markers.clear();
+            shortestTime = 0;
+            JSONArray jsonArray = new JSONArray(json);
+            nearbyUbers = jsonArray.length();
+            ubercount = 0;
+            if(nearbyUbers == 0)
+            {
+                displayNoUbersMessage();
+            }
+            for(int i = 0; i<nearbyUbers; i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                double lat = jsonObject.getDouble("pos_lat");
+                double lon = jsonObject.getDouble("pos_long");
+                addUberMarker(lat,lon);
+                getShortestTime(lat, lon);
+            }
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void waitForUberDriver(final int pendingrideid)
     {
-        Log.i("log", "0");
         Thread timer = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -436,33 +385,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                         }
                         else
                         {
-                            try
-                            {
-                                JSONObject jsonObject = new JSONObject(aResponse);
-                                String name = jsonObject.getString("driver_name");
-                                String lastname = jsonObject.getString("driver_last_name");
-                                String vehicle = jsonObject.getString("vehicle");
-                                String plate = jsonObject.getString("license_plate");
-
-                                StringBuilder sb = new StringBuilder();
-                                sb.append("Your driver is ");
-                                sb.append(name);
-                                sb.append(" " + lastname);
-                                sb.append("\n");
-                                sb.append(vehicle);
-                                sb.append(" " + plate);
-
-                                statusText.setVisibility(View.VISIBLE);
-                                statusText.setText(sb.toString());
-
-
-                            }
-                            catch(JSONException e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                            //poner los datos del chofer
+                            showDriverData(aResponse);
                             syncWithServer = false;
                         }
                     }
@@ -474,6 +397,48 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
             };
         });
         timer.start();
+    }
+
+    private void showDriverData(String json)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(json);
+            driverid = jsonObject.getString("driver_id");
+            String name = jsonObject.getString("driver_name");
+            String lastname = jsonObject.getString("driver_last_name");
+            String vehicle = jsonObject.getString("vehicle");
+            String plate = jsonObject.getString("license_plate");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Your driver is ");
+            sb.append(name);
+            sb.append(" " + lastname);
+            sb.append("\n");
+            sb.append(vehicle);
+            sb.append(" " + plate);
+
+            statusText.setVisibility(View.VISIBLE);
+            statusText.setText(sb.toString());
+
+            removeUbers();
+            trackDriver();
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void removeUbers()
+    {
+        map.clear();
+    }
+
+    private void trackDriver()
+    {
+
     }
 
     public String syncForUber(int pendingrideid)
@@ -521,7 +486,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
 
     public void addUberMarker(double lat, double lon)
     {
-        map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5f,0.5f)); //.icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5,0.5)
+        Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_top)).anchor(0.5f,0.5f));
+        markers.add(marker);
     }
 
     public void getShortestTime(double uberlat, double uberlon)
@@ -554,5 +520,64 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
     public void showMSG(String msg)
     {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private class URLpetition extends AsyncTask<String, Void, String>
+    {
+        String action;
+        public URLpetition(String action)
+        {
+            this.action = action;
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient client = new DefaultHttpClient();
+            Log.d("url = ", params[0]);
+            HttpGet get = new HttpGet(params[0]);
+            String retorno="";
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+                HttpResponse response = client.execute(get);
+                HttpEntity entity = response.getEntity();
+                //InputStream stream = new InputStream(entity.getContent(),"UTF-8");
+                InputStream stream = entity.getContent();
+                BufferedReader r = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                String line;
+                while ((line= r.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                return stringBuilder.toString();
+
+            }
+            catch(IOException e) {
+                Log.d("Error: ", e.getMessage());
+            }
+            Log.d("Return text = ", retorno);
+            return retorno;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            switch (action)
+            {
+                default:
+                    break;
+                case "geocoder inverse":
+                    setLocationName(result);
+                    break;
+                case "get nearby ubers":
+                    showUberMarkers(result);
+                    break;
+                case "get shortest time":
+                    showShortestTime(result);
+                    break;
+                case "send uber request":
+                    postSendUberRequest(result);
+                    break;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {}
     }
 }
