@@ -22,7 +22,6 @@
     <string name="title_section4">Share</string>
     <string name="title_section5">Support</string>
     <string name="title_section6">About</string>
-
     <string name="home_pickup_title">Select pick up location</string>
     <string name="request_uber">Request Uber</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -58,7 +57,7 @@
     <string name="registerPayment_postalCode">Postal code</string>
     <string name="registerPayment_registerCard">Register card</string>
     <string name="facebook_app_id">396977273804909</string>
-    <string name="ip">http://192.168.1.36:8000/</string>
+    <string name="ip">http://192.168.1.76:8000/</string>
 
     <string-array name="addPayment_countries">
         <item>Country</item>
@@ -80,5 +79,15 @@
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_initial">InitialActivity</string>
+    <string name="title_activity_ride_details">RideDetailsActivity</string>
+
+    <string name="origin_label">You went from </string>
+    <string name="destination_label">to </string>
+    <string name="time_label">The ride took </string>
+    <string name="distance_label">You traveled </string>
+    <string name="fee_label">Your fee was </string>
+    <string name="final_fee_label">Adjusted fee was </string>
+    <string name="rating_label">Please rate your driver</string>
+    <string name="accept_ride_details_button">Accept</string>
 
 </resources>

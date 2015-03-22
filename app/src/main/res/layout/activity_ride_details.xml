@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.dzt.uberclone.RideDetailsActivity">
+
+    <TextView
+        android:id="@+id/origin_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/origin_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/origin_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/destination_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/destination_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/origin_label"/>
+
+    <TextView
+        android:id="@+id/destination_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/origin_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/time_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/time_label"
+        android:layout_below="@+id/destination_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/destination_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/distance_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/distance_label"
+        android:layout_below="@+id/time_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/distance_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/fee_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/fee_label"
+        android:layout_below="@+id/distance_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/fee_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/distance_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+
+    <TextView
+        android:id="@+id/final_fee_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/final_fee_label"
+        android:layout_below="@+id/fee_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/final_fee_text"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fee_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:id="@+id/rating_label"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/rating_label"
+        android:layout_below="@+id/final_fee_label"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="20dp"/>
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_label"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:layout_marginBottom="50dp"/>
+
+    <Button
+        android:id="@+id/accept_ride_details_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rating_bar"
+        android:text="@string/accept_ride_details_button"/>
+
+</RelativeLayout>

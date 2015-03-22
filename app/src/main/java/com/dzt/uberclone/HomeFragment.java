@@ -541,6 +541,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                 String time = jsonObject.getString("time");
                 String fee = jsonObject.getString("fee");
                 String finalFee = jsonObject.getString("final_fee");
+
+                Bundle params = new Bundle();
+                params.putString("originText", initialLat+","+initialLng);
+                params.putString("destinationText", finalLat+","+finalLng);
+                params.putString("timeText", time);
+                params.putString("distanceText", distance);
+                params.putString("feeText", fee);
+                params.putString("finalFeeText", finalFee);
+                params.putString("rideId", currentRideId);
+                /*
+
                 StringBuilder sb = new StringBuilder();
                 sb.append("You went from ");
                 sb.append(initialLat);
@@ -562,7 +573,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Goog
                 Log.i("ride details", sb.toString());
                 Toast.makeText(getActivity(), sb.toString(), Toast.LENGTH_LONG).show();
 
-                // TODO show ride details
+                */
+
+                Intent intent = new Intent(getActivity(), RideDetailsActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+                getActivity().finish();
+
             }
             else
             {
