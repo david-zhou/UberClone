@@ -14,9 +14,12 @@ Of course it is not complete and has some bugs, so any recommendation is welcome
 
 
 For deploying the app, you'll need to add certain dependencies to the gradle. In this case I used these ones:
-  compile 'com.android.support:appcompat-v7:21.0.3'
-  compile 'com.google.android.gms:play-services:6.5.87'
+- compile 'com.android.support:appcompat-v7:21.0.3'
+- compile 'com.google.android.gms:play-services:6.5.87'
 
-You will also need to run the server https://github.com/david-zhou/uberserver and the driver app https://github.com/david-zhou/UberDriver, and put the server IP in the strings file.
+You will also need to run: 
+- server https://github.com/david-zhou/uberserver 
+- and the driver app https://github.com/david-zhou/UberDriver, 
+and put the server IP in the strings file.
 
 For using Google Maps, Google Places and all other Google features, you need an API_KEY, so go to https://console.developers.google.com/project and get one
