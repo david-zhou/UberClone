@@ -185,8 +185,8 @@ public class AddWorkFragment extends Fragment implements AdapterView.OnItemClick
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.remove_home_button:
-                //remove home code
+            case R.id.remove_work_button:
+                //remove work code
                 SharedPreferences sp = getActivity().getSharedPreferences("Session", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("work", "");
