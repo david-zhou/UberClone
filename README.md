@@ -10,7 +10,7 @@ Hello everyone, this is a Uber-like application I created. It has some features 
 - Track your driver position, name, car plate, etc
 - Post-ride details (Distance, time, fee)
 
-Of course it is not complete and has some bugs, so any recommendation is welcomed :)
+Of course it is not complete, and maybe implementation is not optimal and has some bugs, so any recommendation is welcomed :)
 
 
 For deploying the app, you'll need to add certain dependencies to the gradle. In this case I used these ones:
